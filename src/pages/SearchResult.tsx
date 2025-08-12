@@ -32,13 +32,8 @@ export default function SearchResult() {
         customAPIs,
         newResults => {
           setSearchRes(prevResults => {
-            const allResults = [...prevResults, ...newResults]
-            allResults.sort((a, b) => {
-              const nameCompare = (a.vod_name || '').localeCompare(b.vod_name || '')
-              if (nameCompare !== 0) return nameCompare
-              return (a.source_name || '').localeCompare(b.source_name || '')
-            })
-            return allResults
+            // Simply combine all results without sorting or filtering
+            return [...prevResults, ...newResults]
           })
         },
         controller.signal,
@@ -62,11 +57,10 @@ export default function SearchResult() {
   }, [query])
 
   useEffect(() => {
-    // TODO: 临时调试代码 - 选中所有源（不包括成人源）
-    // 只在默认状态（只选中黑木耳）时才自动选中所有源
+    // 自动选中所有源（包括成人源）
     if (selectedAPIs.length === 1 && selectedAPIs[0] === 'heimuer') {
-      console.log('[DEBUG] 检测到默认配置，自动选中所有非成人源')
-      selectAllAPIs(true) // true 表示排除成人源
+      console.log('[DEBUG] 检测到默认配置，自动选中所有源')
+      selectAllAPIs(false) // false 表示不排除成人源
     }
     if (search) {
       fetchSearchRes()
